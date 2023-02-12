@@ -17,29 +17,42 @@ public class NPCAI : MonoBehaviour
 
     private bool alreadyAttacked;
 
+    /*Audio and Particle System
+    public AudioSource audioSource;
+    */
+    public ParticleSystem particle;
+
 
     public GameObject bullet;
     private void Awake()
     {
         _agent= GetComponent<NavMeshObstacle>();
     }
+    private void Start()
+    {
+        //particles = GetComponent<ParticleSystem>();
+        //audioSource = GetComponent<AudioSource>();
+    }
     private void Update()
     {
         enemyInAttackRange = Physics.CheckSphere(transform.position, attackRange, enemy);
-        Vector3 targetPos = _enemy.position;
-        targetPos.y = transform.position.y;
 
         if (enemyInAttackRange)
         {
-            AttackEnemy(targetPos);
+            AttackEnemy();
         }
     }
-    private void AttackEnemy(Vector3 targetpos)
+    private void AttackEnemy()
     {
-        transform.LookAt(targetpos);
+        Vector3 targetPos = _enemy.position;
+        targetPos.y = transform.position.y;
+        transform.LookAt(targetPos);
         if(!alreadyAttacked)
         {
-            Rigidbody rb=Instantiate(bullet, bulletRange.position, Quaternion.identity).GetComponent<Rigidbody>();
+
+            Rigidbody rb =Instantiate(bullet, bulletRange.position, Quaternion.identity).GetComponent<Rigidbody>();
+            ParticleSystem particleInstance= Instantiate(particle, bulletRange.position, Quaternion.identity);
+            particleInstance.Play();
             rb.AddForce(transform.forward*20,ForceMode.Impulse);
             alreadyAttacked = true;
             Invoke(nameof(ResetAttack), timeBetweenAttacks);

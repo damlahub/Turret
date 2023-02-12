@@ -17,9 +17,8 @@ public class NPCAI : MonoBehaviour
 
     private bool alreadyAttacked;
 
-    /*Audio and Particle System
+    //Audio and Particle System
     public AudioSource audioSource;
-    */
     public ParticleSystem particle;
 
 
@@ -30,8 +29,7 @@ public class NPCAI : MonoBehaviour
     }
     private void Start()
     {
-        //particles = GetComponent<ParticleSystem>();
-        //audioSource = GetComponent<AudioSource>();
+        audioSource = GetComponent<AudioSource>();
     }
     private void Update()
     {
@@ -53,6 +51,7 @@ public class NPCAI : MonoBehaviour
             Rigidbody rb =Instantiate(bullet, bulletRange.position, Quaternion.identity).GetComponent<Rigidbody>();
             ParticleSystem particleInstance= Instantiate(particle, bulletRange.position, Quaternion.identity);
             particleInstance.Play();
+            audioSource.Play();
             rb.AddForce(transform.forward*20,ForceMode.Impulse);
             alreadyAttacked = true;
             Invoke(nameof(ResetAttack), timeBetweenAttacks);
